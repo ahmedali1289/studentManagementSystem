@@ -49,7 +49,7 @@ function student() {
           <Heading
             heading={"Student Info"}
             color={"white"}
-            size={null}
+            // size={null}
             alignment={"center"}
           />
         </div>

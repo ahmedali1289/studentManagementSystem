@@ -106,7 +106,7 @@ function Students() {
           <Heading
             heading={"Teachers"}
             color={"white"}
-            size={null}
+            // size={null}
             alignment={"center"}
           />
         </div>

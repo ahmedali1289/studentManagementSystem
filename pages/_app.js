@@ -1,19 +1,19 @@
-// import Script from 'next/script'
-import "../styles/globals.css";
-import "tailwindcss/tailwind.css";
-// import "react-tooltip/dist/react-tooltip.css";
-// import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.css";
+import "react-toastify/dist/ReactToastify.css";
+import "react-tooltip/dist/react-tooltip.css";
+import "tailwindcss/tailwind.css";
+import "../styles/globals.css";
 import Header from "./components/Header";
 import Sidebar from "./components/sidebar";
 import Head from "next/head";
-// import { ToastContainer, Flip } from "react-toastify";
-import { AppProvider } from "./context/AppContext";
+import { ToastContainer, Flip } from "react-toastify";
+import { AppContext, AppProvider } from "./context/AppContext";
+import { useContext } from "react";
+import Login from "./authScreens/loginScreen";
 function MyApp({ Component, pageProps }) {
   return (
     <AppProvider>
       <Head>
-        {/* <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" /> */}
         <title>School Management System</title>
         <meta
           name="description"
@@ -21,30 +21,26 @@ function MyApp({ Component, pageProps }) {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" ></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
       </Head>
-      <div className="flex w-screen h-screen">
-        <Sidebar />
-        <div className="w-screen ">
-          <Header />
-          <Component {...pageProps} />
-        </div>
-      </div>
-      {/* <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable={false}
-        pauseOnHover
-        theme="dark"
-        transition={Flip}
-      /> */}
+      <InnerComponent Component={Component} pageProps={pageProps} />
     </AppProvider>
   );
 }
-
+function InnerComponent({ Component, pageProps }) {
+  const { token } = useContext(AppContext);
+  return token ? (
+    <div className="flex w-screen h-screen">
+      <Sidebar />
+      <div className="w-screen ">
+        <Header />
+        <Component {...pageProps} />
+      </div>
+    </div>
+  ) : (
+    <>
+    <Login />
+    </>
+  );
+}
 export default MyApp;

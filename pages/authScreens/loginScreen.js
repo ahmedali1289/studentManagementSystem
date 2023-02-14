@@ -3,8 +3,7 @@ import Heading from '../reusableComponents/Heading'
 import InputFeilds from '../reusableComponents/InputFeilds'
 import Button from '../reusableComponents/Button'
 import axios from "axios"
-// import { showToast } from '../reusableComponents/Toaster'
-// import { Flip, ToastContainer } from 'react-toastify'
+import { showToast } from '../reusableComponents/Toaster'
 import { AppContext } from '../context/AppContext'
 function Login() {
   const [email, setEmail] = useState('')
@@ -15,12 +14,12 @@ function Login() {
   const login = () => {
     setLoading(true)
     axios.post('/api/login', { email: email, password: password }).then(res => {
-      // showToast(res?.data?.status, "success");
+      showToast(res?.data?.status, "success");
       localStorage.setItem('token', res?.data?.token)
       setToken(res?.data?.token)
       setLoading(false)
     }).catch(error => {
-      // showToast(error?.response?.data?.status, "error");
+      showToast(error?.response?.data?.status, "error");
       setLoading(false)
     })
   }
@@ -31,7 +30,7 @@ function Login() {
           <Heading
             heading={"Login"}
             color={"white"}
-            size={null}
+            // size={null}
             alignment={"center"}
           />
         </div>
@@ -63,19 +62,6 @@ function Login() {
           <Button text={"Login"} onclick={login} loading={loading} />
         </div>
       </div>
-      {/* <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable={false}
-        pauseOnHover
-        theme="dark"
-        transition={Flip}
-      /> */}
     </div>
   )
 }

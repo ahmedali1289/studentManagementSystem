@@ -17,6 +17,7 @@ function Students() {
     addGradeToCourse,
     markAttendanceToAssignedCourses,
     coursesList,
+    getStudents
   } = useContext(AppContext);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
@@ -28,6 +29,10 @@ function Students() {
   const [courseIndex, setCourseIndex] = useState("");
   const [originalArray, setOriginalArray] = useState(null);
   const [options, setOptions] = useState(originalArray);
+  useEffect(() => {
+    getStudents
+  }, [])
+  
   useEffect(() => {
     let courses = [];
     if (coursesList) {
@@ -106,7 +111,7 @@ function Students() {
           <Heading
             heading={"Students"}
             color={"white"}
-            size={null}
+            // size={null}
             alignment={"center"}
           />
         </div>

@@ -53,7 +53,7 @@ function AddStudent() {
           <Heading
             heading={"Add Student"}
             color={"white"}
-            size={null}
+            // size={null}
             alignment={"center"}
           />
         </div>

@@ -1,26 +1,28 @@
 import React, { useContext, useState } from "react";
-import { AppContext } from "../context/AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-
+import { showToast } from "../reusableComponents/Toaster";
+import { AppContext } from "../context/AppContext";
+import  Router  from "next/router";
 const Header = () => {
   const { currentAccount, userName, setToken, token } = useContext(AppContext);
-  const [loading, setLoading] = useState(false);
   const logout = () => {
-    setLoading(true);
     axios
       .post("/api/logout", { token: token })
       .then((res) => {
-        setLoading(false);
+        // router.replace("/");
+        // setLoading(false);
         // showToast(res?.data?.status, "success");
-        setToken(null);
         localStorage.clear();
+        setToken(null);
+        console.log("====================================");
         Router.push("/");
+        console.log(token);
+        console.log("====================================");
       })
       .catch((error) => {
-        setLoading(false);
-        // showToast(error?.response?.data?.status, "error");
+        showToast(error?.response?.data?.status, "error");
       });
   };
   return (

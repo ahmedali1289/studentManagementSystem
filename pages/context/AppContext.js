@@ -3,10 +3,8 @@ import Web3Modal from "web3Modal";
 import { ethers } from "ethers";
 import errorHandler from "../reusableComponents/ErrorHandler";
 import { studentAddress, studentABI } from "./constants";
-// import { showToast } from "../reusableComponents/showToast"
-import Login from "../authScreens/loginScreen";
-import Router from "next/router";
 import axios from "axios";
+import { showToast } from "../reusableComponents/Toaster";
 const fetchContract = (signerOrProvider) =>
   new ethers.Contract(studentAddress, studentABI, signerOrProvider);
 export const AppContext = React.createContext();
@@ -25,16 +23,12 @@ export const AppProvider = ({ children }) => {
   const [studentInfo, setStudentInfo] = useState(null);
   const [teacherInfo, setTeacherInfo] = useState(null);
   useEffect(() => {
-    const source = axios.CancelToken.source();
     const localToken = localStorage.getItem("token");
     if (localToken) {
       setToken(localToken);
-      getMyData(localToken, source);
+      getMyData(localToken);
     }
-    return () => {
-      source.cancel("Request canceled by user");
-    };
-  }, [setToken, token]);
+  }, [token]);
   useEffect(() => {
     if (token) {
       getStudents();
@@ -60,7 +54,7 @@ export const AppProvider = ({ children }) => {
   };
   useEffect(() => {
     if (error) {
-      // showToast(error, "error");
+      showToast(error, "error");
       setError(null);
     }
   }, [error]);
@@ -84,11 +78,10 @@ export const AppProvider = ({ children }) => {
         }
       });
   };
-  const getMyData = async (token, source) => {
+  const getMyData = async (token) => {
     await axios
-      .post("/api/mydata", { token: token }, { cancelToken: source.token })
+      .post("/api/mydata", { token: token })
       .then((res) => {
-        console.log(res);
         setRoutes(res?.data?.routes);
         setUserName(res?.data?.name);
         if (currentAccount[0]) {
@@ -139,7 +132,7 @@ export const AppProvider = ({ children }) => {
       createList.wait();
       if (createList) {
         setStudentAdd(true);
-        // handleSignUp(data.name);
+        handleSignUp(data.name);
       }
     } catch (error) {
       if (errorHandler(errorMap, error)) {
@@ -149,6 +142,7 @@ export const AppProvider = ({ children }) => {
     }
   };
   const getStudents = async () => {
+    console.log("hello")
     try {
       const web3modal = new Web3Modal();
       const connection = await web3modal.connect();
@@ -278,7 +272,7 @@ export const AppProvider = ({ children }) => {
       createList.wait();
       if (createList) {
         getCourses();
-        // showToast("Course list updated", "success");
+        showToast("Course list updated", "success");
       }
     } catch (error) {
       console.log(error.message);
@@ -301,7 +295,7 @@ export const AppProvider = ({ children }) => {
     } catch (error) {
       console.log(error, "errors");
       if (errorHandler(errorMap, error)) {
-        // setError(errorHandler(errorMap, error));
+        setError(errorHandler(errorMap, error));
       }
     }
   };
@@ -317,6 +311,7 @@ export const AppProvider = ({ children }) => {
         studentsList,
         studentAdd,
         getStudent,
+        getStudents,
         studentById,
         assignCourse,
         getAssignCourses,
