@@ -5,9 +5,12 @@ const Sidebar = () => {
   const { routes } =
     useContext(AppContext);
   return (
-    <div className="md:w-3/12 w-6/12 h-screen shadow-2xl">
+    <div className="md:w-3/12 w-6/12 h-screen shadow-2xl bgOverlay">
       <div className=" border-b flex justify-around header p-0">
-        <p className="text-lg text-white mb-0 font-semibold">Student Management System</p>
+        <div className="logoBox">
+        <img src="/logo.webp" />
+        </div>
+        {/* <p className="text-lg text-white mb-0 font-semibold">Student Management System</p> */}
       </div>
       <div className="p-4 space-y-14">
         <div className="space-y-4">

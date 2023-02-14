@@ -24,7 +24,7 @@ const Header = () => {
       });
   };
   return (
-    <div className="flex shadow-sm bg-gray-40 header justify-between  ">
+    <div className="flex shadow-sm bg-gray-40 header justify-between  bgOverlay">
       <div className="flex space-x-3  ">
         <p className="text-white mb-0">Address:</p>
         <p className="text-white mb-0">{currentAccount}</p>

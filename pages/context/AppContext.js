@@ -25,12 +25,16 @@ export const AppProvider = ({ children }) => {
   const [studentInfo, setStudentInfo] = useState(null);
   const [teacherInfo, setTeacherInfo] = useState(null);
   useEffect(() => {
+    const source = axios.CancelToken.source();
     const localToken = localStorage.getItem("token");
     if (localToken) {
       setToken(localToken);
-      getMyData(localToken)
-    } else setToken(null);
-  }, [token]);
+      getMyData(localToken, source);
+    }
+    return () => {
+      source.cancel("Request canceled by user");
+    };
+  }, [setToken, token]);
   useEffect(() => {
     if (token) {
       getStudents();
@@ -38,17 +42,10 @@ export const AppProvider = ({ children }) => {
   }, [studentAdd]);
   useEffect(() => {
     if (token) {
-      connectWallet();
-    } else {
-      Router.push("/");
-    }
-  }, [currentAccount, token]);
-  useEffect(() => {
-    if (token) {
       getCourses();
     }
   }, [coursesList]);
-  
+
   const errorMap = {
     "invalid BigNumber string":
       "Oops! The number you entered is not valid. Please enter a valid number and try again.",
@@ -67,33 +64,45 @@ export const AppProvider = ({ children }) => {
       setError(null);
     }
   }, [error]);
+
   const handleSignUp = async (name) => {
-    const firstName = name?.split(' ')?.[0]
+    const firstName = name?.split(" ")?.[0];
     axios
       .post("/api/signup", {
-        name: firstName ,
+        name: firstName,
         role: "student",
       })
       .then(function (response) {
         console.log(response);
-        setStudentInfo(response?.data)
+        setStudentInfo(response?.data);
       })
       .catch(function (error) {
+        if (axios.isCancel(error)) {
+          console.log("Request canceled");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+  const getMyData = async (token, source) => {
+    await axios
+      .post("/api/mydata", { token: token }, { cancelToken: source.token })
+      .then((res) => {
+        console.log(res);
+        setRoutes(res?.data?.routes);
+        setUserName(res?.data?.name);
+        if (currentAccount[0]) {
+          getStudents();
+          getCourses();
+        }
+        else{
+          connectWallet();
+        }
+      })
+      .catch((error) => {
         console.log(error);
       });
   };
-  const getMyData = async (token) => {
-    axios.post('/api/mydata', { token:token }).then(res => {
-      console.log(res);
-      setRoutes(res?.data?.routes)
-      setUserName(res?.data?.name)
-      // setLoading(false)
-    }).catch(error => {
-      console.log(error);
-      // showToast(error?.response?.data?.status, "error");
-      // setLoading(false)
-    })
-  }
   // conntecting metamask
   const connectWallet = async () => {
     if (window.ethereum) {
@@ -103,8 +112,6 @@ export const AppProvider = ({ children }) => {
         });
         if (accounts) {
           setCurrentAccount(accounts[0]);
-          getStudents();
-          getCourses();
         } else {
           console.log("connect metamask Account");
         }
@@ -132,7 +139,7 @@ export const AppProvider = ({ children }) => {
       createList.wait();
       if (createList) {
         setStudentAdd(true);
-        handleSignUp(data.name)
+        // handleSignUp(data.name);
       }
     } catch (error) {
       if (errorHandler(errorMap, error)) {
@@ -149,7 +156,6 @@ export const AppProvider = ({ children }) => {
       const signer = provider.getSigner();
       const contract = await fetchContract(signer);
       const getAllAddress = await contract.getAllStudents();
-      console.log(getAllAddress);
       setStudentAdd(false);
       setStudentsList(getAllAddress);
     } catch (error) {
@@ -185,7 +191,7 @@ export const AppProvider = ({ children }) => {
       const createList = await contract.assignCourse(data.id, data.course);
       createList.wait();
       if (createList) {
-        getStudents();
+        // getStudents();
         getAssignCourses();
       }
     } catch (error) {
@@ -209,7 +215,7 @@ export const AppProvider = ({ children }) => {
       );
       createList.wait();
       if (createList) {
-        getStudents();
+        // getStudents();
       }
     } catch (error) {
       console.log(error);
@@ -233,7 +239,7 @@ export const AppProvider = ({ children }) => {
       );
       createList.wait();
       if (createList) {
-        getStudents();
+        // getStudents();
       }
     } catch (error) {
       console.log(error);
@@ -295,7 +301,7 @@ export const AppProvider = ({ children }) => {
     } catch (error) {
       console.log(error, "errors");
       if (errorHandler(errorMap, error)) {
-        setError(errorHandler(errorMap, error));
+        // setError(errorHandler(errorMap, error));
       }
     }
   };
@@ -328,10 +334,10 @@ export const AppProvider = ({ children }) => {
         routes,
         setRoutes,
         studentInfo,
-        teacherInfo
+        teacherInfo,
       }}
     >
-      {token ? children : <Login />}
+      {children}
     </AppContext.Provider>
   );
 };

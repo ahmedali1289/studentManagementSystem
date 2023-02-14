@@ -8,7 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MDBDataTable } from "mdbreact";
 import { useRouter } from "next/router";
-import { Tooltip as ReactTooltip } from "react-tooltip";
+// import { Tooltip as ReactTooltip } from "react-tooltip";
 const Table = ({
   list,
   setId,
@@ -36,7 +36,7 @@ const Table = ({
             null
           //   <FontAwesomeIcon
           //   id={"courses"+id}
-          //   data-tooltip-content="Click to edit course"
+            // data-tooltip-content="Click to edit course"
           //   icon={faEdit}
           //   onClick={() => {
           //     getAssignCourses(id);
@@ -49,7 +49,7 @@ const Table = ({
             <>
           <FontAwesomeIcon
             id={"courses"+id}
-            data-tooltip-content="Click to add courses"
+            // data-tooltip-content="Click to add courses"
             icon={faBook}
             onClick={() => {
               getAssignCourses(id);
@@ -60,7 +60,7 @@ const Table = ({
           />
           <FontAwesomeIcon
             id={"grades"+id}
-            data-tooltip-content="Click to add grades"
+            // data-tooltip-content="Click to add grades"
             icon={faClipboardUser}
             className="me-3"
             onClick={() => {
@@ -71,7 +71,7 @@ const Table = ({
           />
           <FontAwesomeIcon
             id={"attendance"+id}
-            data-tooltip-content="Click to mark attendance"
+            // data-tooltip-content="Click to mark attendance"
             icon={faEdit}
             className="me-3"
             onClick={() => {
@@ -82,7 +82,7 @@ const Table = ({
           />
           <FontAwesomeIcon
             id={"profile"+id}
-            data-tooltip-content="Click to view profile"
+            // data-tooltip-content="Click to view profile"
             onClick={() =>
               router.push({ pathname: "/students/student", query: { id: id } })
             }
@@ -90,10 +90,10 @@ const Table = ({
           />
             </>
           }
-          <ReactTooltip anchorId={"attendance"+id} />
+          {/* <ReactTooltip anchorId={"attendance"+id} />
           <ReactTooltip anchorId={"profile"+id} />
           <ReactTooltip anchorId={"grades"+id} />
-          <ReactTooltip anchorId={"courses"+id} />
+          <ReactTooltip anchorId={"courses"+id} /> */}
         </div>
       </div>
     );
@@ -196,7 +196,7 @@ const Table = ({
 
   return (
     <div className="table-responsive">
-      <MDBDataTable responsive bordered data={data} />
+      <MDBDataTable noBottomColumns={true} responsive bordered data={data} />
     </div>
   );
 };
